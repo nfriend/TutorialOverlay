@@ -8,6 +8,14 @@
         <RectangleGeometry x:Key="Hole" x:Name="Hole"></RectangleGeometry>
         <Color x:Key="OverlayColor">#88000000</Color>
         <SolidColorBrush x:Key="OverlayBrush" Color="{StaticResource OverlayColor}" />
+
+        <Style TargetType="{x:Type local:Arrow}">
+            <Setter Property="OpacityMask">
+                <Setter.Value>
+                    <ImageBrush ImageSource="texture.png" Stretch="UniformToFill"  />
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid>
@@ -167,6 +175,11 @@
                     </VisualBrush>
                 </Path.Fill>
             </Path>
+            <local:Arrow Grid.RowSpan="4" Grid.ColumnSpan="4" X1="{Binding Source={StaticResource Hole}, Path=Rect.X}" Y1="{Binding Source={StaticResource Hole}, Path=Rect.Y}" X2="80" Y2="30" CurveDirection="Concave" Stroke="White" HeadWidth="18" HeadHeight="10" StrokeThickness="6.0">
+                <local:Arrow.OpacityMask>
+                    <ImageBrush ImageSource="texture.png" Stretch="UniformToFill"  />
+                </local:Arrow.OpacityMask>
+            </local:Arrow>
         </Grid>
     </Grid>
 </Window>

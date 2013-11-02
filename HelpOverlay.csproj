@@ -53,6 +53,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Arrow.cs" />
+    <Compile Include="Step.cs" />
     <Compile Include="WindowSizeToRectConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -96,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="mask.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="texture.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
