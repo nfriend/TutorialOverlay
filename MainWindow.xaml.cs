@@ -20,24 +20,58 @@ namespace HelpOverlay
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const double CUTOUT_MARGIN = 20;
+        
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void Window_MouseMove(object sender, MouseEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            EllipseGeometry hole = this.Resources["Hole"] as EllipseGeometry;
-
-            if (hole != null)
+            if (Overlay.Visibility != Visibility.Visible)
             {
-                hole.Center = e.GetPosition(this);
+                Overlay.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Overlay.Visibility = Visibility.Collapsed;
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            RectangleGeometry hole = this.Resources["Hole"] as RectangleGeometry;
+            FrameworkElement myButton = FindChild(Application.Current.MainWindow, "myButton");
+            
+            if (hole != null && myButton != null)
+            {
+                Point topLeft = myButton.TranslatePoint(new Point(0, 0), Application.Current.MainWindow);
+                hole.Rect = new Rect(topLeft.X - CUTOUT_MARGIN, topLeft.Y - CUTOUT_MARGIN, myButton.ActualWidth + CUTOUT_MARGIN * 2, myButton.ActualHeight + CUTOUT_MARGIN * 2);
+            }
+        }
 
+        public static FrameworkElement FindChild(DependencyObject rootElement, string childName)
+        {
+            if (rootElement == null) return null;
+
+            FrameworkElement rootElementAsFrameworkElement = rootElement as FrameworkElement;
+            if (rootElementAsFrameworkElement != null && rootElementAsFrameworkElement.Name == childName)
+            {
+                return rootElementAsFrameworkElement;
+            }
+            else
+            {
+                int childrenCount = VisualTreeHelper.GetChildrenCount(rootElement);
+                for (int i = 0; i < childrenCount; i++)
+                {
+                    FrameworkElement fe = FindChild(VisualTreeHelper.GetChild(rootElement, i), childName);
+                    if (fe != null)
+                        return fe;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -2,39 +2,141 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:HelpOverlay"
-        Title="MainWindow" Height="350" Width="525" MouseMove="Window_MouseMove">
+        Title="MainWindow" Height="350" Width="525" SizeChanged="Window_SizeChanged" UseLayoutRounding="True">
     <Window.Resources>
-        <EllipseGeometry x:Key="Hole" RadiusX="50" RadiusY="50" Center="50,50"></EllipseGeometry>
-        <Color x:Key="OverlayColor">#AA000000</Color>
+        <!--<EllipseGeometry x:Key="Hole" x:Name="Hole" RadiusX="50" RadiusY="50" Center="50,50"></EllipseGeometry>-->
+        <RectangleGeometry x:Key="Hole" x:Name="Hole"></RectangleGeometry>
+        <Color x:Key="OverlayColor">#88000000</Color>
         <SolidColorBrush x:Key="OverlayBrush" Color="{StaticResource OverlayColor}" />
     </Window.Resources>
     <Grid>
-        <Button HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click">Here's my button</Button>
-        <Path Fill="{StaticResource OverlayBrush}" RenderOptions.EdgeMode="Aliased">
-            <Path.Data>
-                <CombinedGeometry GeometryCombineMode="Exclude" x:Name="CombinedGeometry" Geometry2="{StaticResource Hole}">
-                    <CombinedGeometry.Geometry1>
-                        <RectangleGeometry>
-                            <RectangleGeometry.Rect>
-                                <MultiBinding Converter="{local:WindowSizeToRectConverter}">
-                                    <MultiBinding.Bindings>
-                                        <Binding RelativeSource="{RelativeSource AncestorType={x:Type Window}}" Path="ActualHeight" />
-                                        <Binding RelativeSource="{RelativeSource AncestorType={x:Type Window}}" Path="ActualWidth" />
-                                    </MultiBinding.Bindings>
-                                </MultiBinding>
-                            </RectangleGeometry.Rect>
-                        </RectangleGeometry>
-                    </CombinedGeometry.Geometry1>
-                </CombinedGeometry>
-            </Path.Data>
-        </Path>
-        <Path IsHitTestVisible="False" Data="{StaticResource Hole}" RenderOptions.EdgeMode="Aliased">
-            <Path.Fill>
-                <RadialGradientBrush>
-                    <GradientStop Color="Transparent" Offset=".5"/>
-                    <GradientStop Color="{StaticResource OverlayColor}" Offset="1"/>
-                </RadialGradientBrush>
-            </Path.Fill>
-        </Path>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            
+            <Button HorizontalAlignment="Left" VerticalAlignment="Top">this is not my button</Button>
+            <Button Grid.Row="1" Grid.Column="1"  Click="Button_Click" x:Name="myButton">Here's my button</Button>
+        </Grid>
+        <Grid x:Name="Overlay" Visibility="Collapsed">
+            <Path Fill="{StaticResource OverlayBrush}" RenderOptions.EdgeMode="Aliased">
+                <Path.Data>
+                    <CombinedGeometry GeometryCombineMode="Exclude" x:Name="CombinedGeometry" Geometry2="{StaticResource Hole}">
+                        <CombinedGeometry.Geometry1>
+                            <RectangleGeometry>
+                                <RectangleGeometry.Rect>
+                                    <MultiBinding Converter="{local:WindowSizeToRectConverter}">
+                                        <MultiBinding.Bindings>
+                                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type Window}}" Path="ActualHeight" />
+                                            <Binding RelativeSource="{RelativeSource AncestorType={x:Type Window}}" Path="ActualWidth" />
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </RectangleGeometry.Rect>
+                            </RectangleGeometry>
+                        </CombinedGeometry.Geometry1>
+                    </CombinedGeometry>
+                </Path.Data>
+            </Path>
+            <Path IsHitTestVisible="False" Data="{StaticResource Hole}" RenderOptions.EdgeMode="Aliased"> <!--Fill="{StaticResource OverlayBrush}"-->
+                <!--<Path.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="Transparent" Offset=".3"/>
+                        <GradientStop Color="{StaticResource OverlayColor}" Offset="1"/>
+                    </RadialGradientBrush>
+                </Path.Fill>-->
+                <!--<Path.OpacityMask>
+                    <ImageBrush ImageSource="mask.png" />
+                </Path.OpacityMask>-->
+                <Path.Fill>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Grid Width="{Binding Source={StaticResource Hole}, Path=Rect.Width}" Height="{Binding Source={StaticResource Hole}, Path=Rect.Height}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="15" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="15" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="15" />
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Column="0" Grid.Row="0">
+                                    <Grid.Background>
+                                        <RadialGradientBrush Center="1,1" GradientOrigin="1,1" RadiusX="1" RadiusY="1">
+                                            <GradientStop Color="{StaticResource OverlayColor}" Offset="1" />
+                                            <GradientStop Color="Transparent" Offset="0" />
+                                        </RadialGradientBrush>
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid Grid.Column="1" Grid.Row="0">
+                                    <Grid.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="{StaticResource OverlayColor}" Offset="0" />
+                                            <GradientStop Color="Transparent" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid Grid.Column="2" Grid.Row="0">
+                                    <Grid.Background>
+                                        <RadialGradientBrush Center="0,1" GradientOrigin="0,1" RadiusX="1" RadiusY="1">
+                                            <GradientStop Color="{StaticResource OverlayColor}" Offset="1" />
+                                            <GradientStop Color="Transparent" Offset="0" />
+                                        </RadialGradientBrush>
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid Grid.Column="0" Grid.Row="1">
+                                    <Grid.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="{StaticResource OverlayColor}" Offset="0" />
+                                            <GradientStop Color="Transparent" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid Grid.Column="2" Grid.Row="1">
+                                    <Grid.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="Transparent" Offset="0" />
+                                            <GradientStop Color="{StaticResource OverlayColor}" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid Grid.Column="0" Grid.Row="2">
+                                    <Grid.Background>
+                                        <RadialGradientBrush Center="1,0" GradientOrigin="1,0" RadiusX="1" RadiusY="1">
+                                            <GradientStop Color="{StaticResource OverlayColor}" Offset="1" />
+                                            <GradientStop Color="Transparent" Offset="0" />
+                                        </RadialGradientBrush>
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid Grid.Column="1" Grid.Row="2">
+                                    <Grid.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="Transparent" Offset="0" />
+                                            <GradientStop Color="{StaticResource OverlayColor}" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Grid.Background>
+                                </Grid>
+                                <Grid Grid.Column="2" Grid.Row="2">
+                                    <Grid.Background>
+                                        <RadialGradientBrush Center="0,0" GradientOrigin="0,0" RadiusX="1" RadiusY="1">
+                                            <GradientStop Color="{StaticResource OverlayColor}" Offset="1" />
+                                            <GradientStop Color="Transparent" Offset="0" />
+                                        </RadialGradientBrush>
+                                    </Grid.Background>
+                                </Grid>
+                            </Grid>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Path.Fill>
+            </Path>
+        </Grid>
     </Grid>
 </Window>
