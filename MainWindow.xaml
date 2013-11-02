@@ -15,8 +15,10 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
@@ -25,7 +27,35 @@
             <Button HorizontalAlignment="Left" VerticalAlignment="Top">this is not my button</Button>
             <Button Grid.Row="1" Grid.Column="1"  Click="Button_Click" x:Name="myButton">Here's my button</Button>
         </Grid>
-        <Grid x:Name="Overlay" Visibility="Collapsed">
+        <Grid x:Name="Overlay" Visibility="Collapsed" Opacity="0">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Opacity" To="0" Duration="00:00:00.5" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame Value="{x:Static Visibility.Collapsed}" KeyTime="0" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Shown">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Opacity" To="1" Duration="00:00:00.5" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame Value="{x:Static Visibility.Visible}" KeyTime="0" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Hidden">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Opacity" To="0" Duration="00:00:00.5" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame Value="{x:Static Visibility.Collapsed}" KeyTime="00:00:00.5" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
             <Path Fill="{StaticResource OverlayBrush}" RenderOptions.EdgeMode="Aliased">
                 <Path.Data>
                     <CombinedGeometry GeometryCombineMode="Exclude" x:Name="CombinedGeometry" Geometry2="{StaticResource Hole}">

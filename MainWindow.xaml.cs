@@ -21,6 +21,7 @@ namespace HelpOverlay
     public partial class MainWindow : Window
     {
         private const double CUTOUT_MARGIN = 20;
+        private bool isShown = false;
         
         public MainWindow()
         {
@@ -29,14 +30,12 @@ namespace HelpOverlay
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Overlay.Visibility != Visibility.Visible)
-            {
-                Overlay.Visibility = Visibility.Visible;
-            }
+            if (isShown)
+                VisualStateManager.GoToElementState(Overlay, "Hidden", true);
             else
-            {
-                Overlay.Visibility = Visibility.Collapsed;
-            }
+                VisualStateManager.GoToElementState(Overlay, "Shown", true);
+
+            isShown = !isShown;
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
