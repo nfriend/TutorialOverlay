@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace HelpOverlay
 {
@@ -20,57 +7,29 @@ namespace HelpOverlay
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const double CUTOUT_MARGIN = 20;
-        private bool isShown = false;
-        
         public MainWindow()
         {
             InitializeComponent();
+
+            string lorem = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+            string doubleLorem = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. \n\n Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+            Tutorial t = new Tutorial();
+            t.Steps.Add(new Step() { Message = lorem, TargetElementName = "myOtherButton", MessagePlacement = Placement.Left });
+            t.Steps.Add(new Step() { Message = doubleLorem, TargetElementName = "button3", MessagePlacement = Placement.Right });
+            t.Steps.Add(new Step() { Message = "The final step.", TargetElementName = "button4", MessagePlacement = Placement.Above });
+            t.Steps.Add(new Step() { Message = "The final final step.", TargetElementName = "myOtherButton", MessagePlacement = Placement.Below });
+            TutorialManager.Tutorials.Add("First tutorial", t);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void myButton_Click(object sender, RoutedEventArgs e)
         {
-            if (isShown)
-                VisualStateManager.GoToElementState(Overlay, "Hidden", true);
-            else
-                VisualStateManager.GoToElementState(Overlay, "Shown", true);
-
-            isShown = !isShown;
+            TutorialManager.Tutorials["First tutorial"].Begin();
         }
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void myOtherButton_Click(object sender, RoutedEventArgs e)
         {
-            RectangleGeometry hole = this.Resources["Hole"] as RectangleGeometry;
-            FrameworkElement myButton = FindChild(Application.Current.MainWindow, "myButton");
-            
-            if (hole != null && myButton != null)
-            {
-                Point topLeft = myButton.TranslatePoint(new Point(0, 0), Application.Current.MainWindow);
-                hole.Rect = new Rect(topLeft.X - CUTOUT_MARGIN, topLeft.Y - CUTOUT_MARGIN, myButton.ActualWidth + CUTOUT_MARGIN * 2, myButton.ActualHeight + CUTOUT_MARGIN * 2);
-            }
-        }
-
-        public static FrameworkElement FindChild(DependencyObject rootElement, string childName)
-        {
-            if (rootElement == null) return null;
-
-            FrameworkElement rootElementAsFrameworkElement = rootElement as FrameworkElement;
-            if (rootElementAsFrameworkElement != null && rootElementAsFrameworkElement.Name == childName)
-            {
-                return rootElementAsFrameworkElement;
-            }
-            else
-            {
-                int childrenCount = VisualTreeHelper.GetChildrenCount(rootElement);
-                for (int i = 0; i < childrenCount; i++)
-                {
-                    FrameworkElement fe = FindChild(VisualTreeHelper.GetChild(rootElement, i), childName);
-                    if (fe != null)
-                        return fe;
-                }
-            }
-
-            return null;
+            TutorialManager.CurrentTutorial.GoToNextStep.Execute(null);
         }
     }
 }

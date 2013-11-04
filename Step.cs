@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace HelpOverlay
 {
     public class Step
@@ -22,5 +17,17 @@ namespace HelpOverlay
             set { _message = value; }
         }
 
+        private Placement _messagePlacement = Placement.Right;
+        public Placement MessagePlacement
+        {
+            get { return _messagePlacement; }
+            set { _messagePlacement = value; }
+        }
+
+    }
+
+    public enum Placement
+    {
+        Above, Below, Left, Right
     }
 }

@@ -54,8 +54,19 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Arrow.cs" />
+    <Compile Include="HelpOverlayControl.xaml.cs">
+      <DependentUpon>HelpOverlayControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HelpOverlyHelper.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="Step.cs" />
+    <Compile Include="Tutorial.cs" />
+    <Compile Include="TutorialManager.cs" />
     <Compile Include="WindowSizeToRectConverter.cs" />
+    <Page Include="HelpOverlayControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

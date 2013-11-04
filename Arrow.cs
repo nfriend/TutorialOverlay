@@ -112,9 +112,9 @@ namespace HelpOverlay
         {
             double theta;
             if (this.CurveDirection == CurveDirection.Concave)
-                theta = Math.Atan2(Y1 - Y2, X1 - X2) + (Math.PI / 6);
+                theta = Math.Atan2(Y1 - Y2, X1 - X2) + (Math.PI / 10);
             else
-                theta = Math.Atan2(Y1 - Y2, X1 - X2) - (Math.PI / 6);
+                theta = Math.Atan2(Y1 - Y2, X1 - X2) - (Math.PI / 10);
 
             double sint = Math.Sin(theta);
             double cost = Math.Cos(theta);
@@ -130,7 +130,7 @@ namespace HelpOverlay
                 X2 + (HeadWidth * cost + HeadHeight * sint),
                 Y2 - (HeadHeight * cost - HeadWidth * sint));
 
-            double ellipseSize = Math.Max(Math.Abs(X1 - X2), Math.Abs(Y1 - Y2));
+            double ellipseSize = Math.Max(Math.Abs(X1 - X2), Math.Abs(Y1 - Y2)) * 1.7;
 
             context.BeginFigure(pt1, true, false);
             if (this.CurveDirection == CurveDirection.Concave)
