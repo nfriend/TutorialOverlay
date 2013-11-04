@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:HelpOverlay"
         local:TutorialManager.IsTutorialOverlayCompatible="True"
-        Title="MainWindow" Height="500" Width="725" UseLayoutRounding="True">
+        Title="MainWindow" Height="700" Width="925" UseLayoutRounding="True">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
