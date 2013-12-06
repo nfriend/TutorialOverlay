@@ -29,7 +29,8 @@ namespace HelpOverlay
 
         private void myOtherButton_Click(object sender, RoutedEventArgs e)
         {
-            TutorialManager.CurrentTutorial.GoToNextStep.Execute(null);
+            if (TutorialManager.CurrentTutorial != null)
+                TutorialManager.CurrentTutorial.GoToNextStep.Execute(null);
         }
     }
 }

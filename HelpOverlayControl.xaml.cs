@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace HelpOverlay
 {
@@ -26,6 +28,9 @@ namespace HelpOverlay
         }
 
         private const double CUTOUT_MARGIN = 20;
+        Duration duration = new Duration(TimeSpan.FromMilliseconds(300));
+        Duration halfDuration = new Duration(TimeSpan.FromMilliseconds(150));
+        private string lastTarget = string.Empty;
 
         public void UpdateOverlay()
         {
@@ -37,7 +42,24 @@ namespace HelpOverlay
                 if (hole != null && target != null)
                 {
                     Point targetTopLeft = target.TranslatePoint(new Point(0, 0), Application.Current.MainWindow);
-                    hole.Rect = new Rect(targetTopLeft.X - CUTOUT_MARGIN, targetTopLeft.Y - CUTOUT_MARGIN, target.ActualWidth + CUTOUT_MARGIN * 2, target.ActualHeight + CUTOUT_MARGIN * 2);
+                    Rect newRect = new Rect(targetTopLeft.X - CUTOUT_MARGIN, targetTopLeft.Y - CUTOUT_MARGIN, target.ActualWidth + CUTOUT_MARGIN * 2, target.ActualHeight + CUTOUT_MARGIN * 2);
+
+                    if (hole.Rect != Rect.Empty || TutorialManager.CurrentTutorial.CurrentStep.TargetElementName == lastTarget)
+                    {
+                        RectAnimation rectAnimation = new RectAnimation(newRect, duration);
+                        rectAnimation.EasingFunction = new CubicEase() { EasingMode = System.Windows.Media.Animation.EasingMode.EaseInOut };
+
+                        DoubleAnimation fadeInAnimation = new DoubleAnimation(0, 1, duration);
+                        fadeInAnimation.BeginTime = halfDuration.TimeSpan;
+
+                        hole.BeginAnimation(RectangleGeometry.RectProperty, rectAnimation);
+                        Arrow.BeginAnimation(Arrow.OpacityProperty, fadeInAnimation);
+                        Message.BeginAnimation(Border.OpacityProperty, fadeInAnimation);
+                    }
+                    else
+                    {
+                        hole.Rect = newRect;
+                    }
 
                     MessageTextBox.Text = TutorialManager.CurrentTutorial.CurrentStep.Message;
 
@@ -81,6 +103,8 @@ namespace HelpOverlay
                         MessageContainer.Width = Application.Current.MainWindow.ActualWidth;
                         MessageContainer.Height = Application.Current.MainWindow.ActualHeight - topPlacement;
                     }
+
+                    lastTarget = TutorialManager.CurrentTutorial.CurrentStep.TargetElementName;
                 }
             }
         }
