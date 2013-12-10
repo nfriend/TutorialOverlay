@@ -273,7 +273,12 @@ namespace HelpOverlay
                         int childrenCount = VisualTreeHelper.GetChildrenCount(start);
                         //for (int i = 0; i < childrenCount; i++)
                         {
-                            FrameworkElement fe = GetElement(null, VisualTreeHelper.GetChild(start, path[currentIndexInPath + 1].Index), path, currentIndexInPath + 1);
+                            DependencyObject nextDependencyObject = VisualTreeHelper.GetChild(start, path[currentIndexInPath + 1].Index);
+                            if (start is Panel)
+                            {
+                                nextDependencyObject = ((Panel)start).Children[path[currentIndexInPath + 1].Index];
+                            }
+                            FrameworkElement fe = GetElement(null, nextDependencyObject, path, currentIndexInPath + 1);
                             if (fe != null)
                             {
                                 return fe;
