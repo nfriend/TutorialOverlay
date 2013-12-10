@@ -1,0 +1,121 @@
+﻿<Window x:Class="HelpOverlay.ClickyRecordingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:HelpOverlay.Converters"
+        Title="My Awesome Window!" Height="500" Width="600">
+    <Window.Resources>
+        <ResourceDictionary>
+            <CollectionViewSource x:Key="GroupedTutorialList" Source="{Binding Path=Tutorials}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="ApplicationName"/>
+                </CollectionViewSource.GroupDescriptions>
+            </CollectionViewSource>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <TabControl Name="SupportTutorialTabControl">
+            <TabItem Header="Support">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"/>
+                        <RowDefinition Height="65*"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="45*"/>
+                        <ColumnDefinition Width="45*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Clicky Recording" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <ItemsControl ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding RecordedClicks}" HorizontalContentAlignment="Stretch">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="6" BorderBrush="Gray" Background="AliceBlue" BorderThickness="1.5" Padding="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Path, Converter={converters:PathToNameConverter}}"/>
+                                        <TextBlock Grid.Column="1" Text=" : "/>
+                                        <TextBox Grid.Column="2" Text="{Binding Message}" HorizontalAlignment="Stretch" AcceptsTab="True" AcceptsReturn="True" TextWrapping="Wrap"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="FrameworkElement">
+                                <Setter Property="Margin" Value="0,0,0,3" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
+
+                    <Button Grid.Row="2" Grid.Column="0" Content="Preview" VerticalAlignment="Center"/>
+                    <Button Grid.Row="2" Grid.Column="1" Content="Save" VerticalAlignment="Center" Command="{Binding Save}"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Tutorial">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="45"/>
+                        <RowDefinition Height="5*"/>
+                    </Grid.RowDefinitions>
+                    <ListView Name="ListOfTutorials" Grid.Row="0" ItemsSource="{Binding Source={StaticResource GroupedTutorialList}}" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedTutorial}">
+                        <ListView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.ContainerStyle>
+                                    <Style TargetType="{x:Type GroupItem}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                    <Expander IsExpanded="True" Background="LightBlue">
+                                                        <Expander.Header>
+                                                            <StackPanel HorizontalAlignment="Center">
+                                                                <TextBlock x:Name="GroupName" Text="{Binding Name}" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center"/>
+                                                            </StackPanel>
+                                                        </Expander.Header>
+                                                        <Expander.Content>
+                                                            <ItemsPresenter/>
+                                                        </Expander.Content>
+                                                    </Expander>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </GroupStyle.ContainerStyle>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="6" BorderBrush="Gray" Background="Pink" BorderThickness="1" Padding="3">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding SaveName}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <Button Name="PlayTutorialButton" Grid.Row="1" Content="Play Tutorial" Command="{Binding PlayTutorial}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=ListOfTutorials, Path=SelectedItem}" Value="{x:Null}">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
